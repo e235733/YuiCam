@@ -25,10 +25,12 @@ app = Flask(__name__)
 # ==================================================
 # 一覧
 @app.route('/')
-def index():
+def base():
     return render_template('base.html')
 
-
+@app.route('/index')
+def index():
+    return render_template('index.html')
 
 # ==================================================
 # 実行
