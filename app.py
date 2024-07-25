@@ -3,8 +3,6 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import UserMixin
-from datetime import datetime
-from app import db, login_manager
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -23,6 +21,11 @@ database = 'sqlite:///' + os.path.join(base_dir, 'data.sqlite')
 app.config['SQLALCHEMY_DATABASE_URI'] = database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# ★db変数を使用してSQLAlchemyを操作できる
+db = SQLAlchemy(app)
+# ★「flask_migrate」を使用できる様にする
+Migrate(app, db)
+
 #==================================================
 # データベース(モデル)
 #==================================================
@@ -35,7 +38,7 @@ class User(UserMixin, db.Model):
     
     # Userテーブル
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(30), unique=True, nullable=False)
+    username = db.Column(db.String(30), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     faculty = db.Column(db.Integer, nullable=False)
