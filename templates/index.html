@@ -32,10 +32,10 @@
             <a href="{{ url_for('public_profile_detail', user_id=user.id) }}" class="card-link">
           {% endif %}
             <div class="card">
-              <img src="{{ url_for('profile_picture', user_id=user.id) }}" class="card-img-top" alt="プロフィール写真">
+              <img src="{{ url_for('profile_picture', user_id=user.id) }}" class="card-img-top" alt="プロフィール写真" width="400" height="300">
               <div class="card-body">
                 <h5 class="card-title">{{ user.username }}</h5>
-                <p class="card-text">{{ user.email }}</p>
+                <p class="card-text">{{ faculty_name }}　{{ user.univ_year }}年生</p>
                 <a href="#" class="btn btn-primary">いいね！</a>
               </div>
             </div>
