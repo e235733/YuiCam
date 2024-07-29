@@ -36,7 +36,13 @@
               <div class="card-body">
                 <h5 class="card-title">{{ user.username }}</h5>
                 <p class="card-text">{{ faculty_name }}　{{ user.univ_year }}年生</p>
-                <a href="#" class="btn btn-primary">いいね！</a>
+                <form method="POST" action="{{ url_for('like', liked_id=user.id) }}">
+                    {% if user.query.get(session.get('user_id')).has_liked(user) %}   
+                        <button type="submit" class="btn btn-primary">いいね</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-outline-primary">いいね</button>
+                    {% endif %}
+                </form>
               </div>
             </div>
           </a>
