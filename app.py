@@ -181,6 +181,8 @@ def logout():
 @app.route('/<int:user_id>',methods=['GET','POST'])
 @login_required
 def index(user_id):
+    if user_id != session.get('user_id'):
+        return redirect(url_for('login'))
     users = User.query.all()
     return render_template('index.html',users=users)
 
@@ -188,24 +190,32 @@ def index(user_id):
 @app.route('/<int:user_id>/profile_detail',methods=['GET','POST'])
 @login_required
 def profile_detail(user_id):
+    if user_id != session.get('user_id'):
+        return redirect(url_for('login'))
     return render_template('profile_detail.html')
 
 # マッチングリスト
 @app.route('/<int:user_id>/matching_list')
 @login_required
-def matching_list():
+def matching_list(user_id):
+    if user_id != session.get('user_id'):
+        return redirect(url_for('login'))
     return render_template('matching_list.html')
 
 # いいねリスト
 @app.route('/<int:user_id>/like_list',methods=['GET','POST'])
 @login_required
-def like_list():
+def like_list(user_id):
+    if user_id != session.get('user_id'):
+        return redirect(url_for('login'))
     return render_template('like_list.html')
 
 # プロフィール編集
 @app.route('/<int:user_id>/profile_edit',methods=['GET','POST'])
 @login_required
-def profile_edit():
+def profile_edit(user_id):
+    if user_id != session.get('user_id'):
+        return redirect(url_for('login'))
     return render_template('profile_edit.html')
 
 # ==================================================
