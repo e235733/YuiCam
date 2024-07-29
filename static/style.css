@@ -1,0 +1,15 @@
+.c-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 50px;
+  }
+  
+  .c-grid__item {
+    width: 400px;
+    height: 300px;
+    background: #00bfff;
+    border: 5px solid #000;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+  }
