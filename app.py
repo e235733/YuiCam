@@ -183,7 +183,7 @@ def signin():
             return redirect(url_for('signin'))
 
         #新しいユーザーの作成
-        new_user = User(username=username,email=email,faculty=0,univ_year=1,profile_picture='static/uploads/placeholder.jpg')
+        new_user = User(username=username,email=email,faculty=0,univ_year=1)
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
@@ -352,7 +352,12 @@ def like(liked_id):
 def public_profile_detail(user_id):
     user = User.query.get_or_404(user_id)
     faculty_name = get_faculty_name(user.faculty)
-    return render_template('public_profile_detail.html', user=user, faculty_name=faculty_name)
+    
+    # セッションから現在のユーザーIDを取得
+    current_user_id = session.get('user_id')
+    current_user = User.query.get(current_user_id) if current_user_id else None
+    
+    return render_template('public_profile_detail.html', user=user, faculty_name=faculty_name, current_user=current_user)
 
 # ==================================================
 # 実行
