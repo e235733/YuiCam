@@ -233,7 +233,8 @@ def index():
         return redirect(url_for('login'))
     user = User.query.get(user_id)
     users = User.query.all()
-    return render_template('index.html', users=users, user=user)
+    faculty_name = get_faculty_name(user.faculty)
+    return render_template('index.html', users=users, user=user, faculty_name=faculty_name)
 
 # プロフィール詳細
 @app.route('/<int:user_id>/profile_detail', methods=['GET', 'POST'])
