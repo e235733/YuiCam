@@ -38,8 +38,25 @@
                     パスワードを入力してください。
                 </div>
             </div>
+            <div class="mb-3 d-flex justify-content-between">
+                <a href="{{url_for('login')}}" class="link-primary">ログイン</a>
+            </div>
             <button type="submit" class="btn btn-primary w-100">サインイン</button>
         </form>
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            <div class="container mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% endwith %}
+
+
         <footer class="mt-4">
             <p class="text-center">&copy; 2024 ゆいキャン</p>
         </footer>

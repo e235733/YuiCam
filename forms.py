@@ -18,7 +18,6 @@ class SigninForm(Form):
 
 #ログインクラス
 class LoginForm(Form):
-    username = StringField(validators=[DataRequired('名前は必須入力です')])
     email = StringField()
     password = PasswordField()
 

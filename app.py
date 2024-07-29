@@ -1,9 +1,10 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
 
 from forms import SigninForm,LoginForm,ProfileForm
 
@@ -98,6 +99,15 @@ class Match(db.Model):
         db.session.commit()
         return match
 
+#ユーザーがログインしているか確認するセッション管理
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
 # ==================================================
 # ルーティング
 # ==================================================
@@ -123,7 +133,7 @@ def signin():
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
             # エラーメッセージをフラッシュしてリダイレクト
-            # flash('Email address already exists')
+            flash('Email address already exists')
             return redirect(url_for('signin'))
 
         #新しいユーザーの作成
@@ -139,31 +149,62 @@ def signin():
 # ログイン
 @app.route('/login',methods=['GET','POST'])
 def login():
-    return render_template('login.html')
+    #フォームの作成
+    form = LoginForm(request.form)
+    #POST
+    if request.method == "POST" and form.validate():
+        email = request.form['email']
+        password = request.form['password']  
+
+        user = User.query.filter_by(email=email).first()
+        
+        if user is None or not user.check_password(password):
+            #エラーメッセージをフラッシュしてリダイレクト
+            flash('Invalid email or password')
+            return redirect(url_for('login'))
+        
+        session['user_id'] = user.id
+
+        return redirect(url_for('index',user_id=user.id))
+        
+    return render_template('login.html',form=form)
+
+#ログアウト
+@app.route('/logout')
+@login_required
+def logout():
+    # セッションからユーザーIDを削除してログアウト
+    session.pop('user_id', None)
+    return redirect(url_for('login'))
 
 # お相手一覧
 @app.route('/<int:user_id>',methods=['GET','POST'])
+@login_required
 def index(user_id):
     users = User.query.all()
     return render_template('index.html',users=users)
 
 # プロフィール詳細
 @app.route('/<int:user_id>/profile_detail',methods=['GET','POST'])
-def profile_detail():
+@login_required
+def profile_detail(user_id):
     return render_template('profile_detail.html')
 
 # マッチングリスト
 @app.route('/<int:user_id>/matching_list')
+@login_required
 def matching_list():
     return render_template('matching_list.html')
 
 # いいねリスト
 @app.route('/<int:user_id>/like_list',methods=['GET','POST'])
+@login_required
 def like_list():
     return render_template('like_list.html')
 
 # プロフィール編集
 @app.route('/<int:user_id>/profile_edit',methods=['GET','POST'])
+@login_required
 def profile_edit():
     return render_template('profile_edit.html')
 
