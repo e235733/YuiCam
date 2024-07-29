@@ -8,12 +8,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <header>
+        <h1 style="margin:0;padding:0;font-size: 20px;">ゆいキャン</h1>
+        <nav>
+            <ul>
+                <li><a href="like_list.html" style=text-decoration:none;color:#000>いいね</a></li>
+                <li><a href="matching_list.html" style=text-decoration:none;color:#000>マッチング</a></li>
+                <li><a href="{{ url_for('logout') }}" style=text-decoration:none;color:#000>ログアウト</a></li>
+                <li><a href="profile_detail.html" style=text-decoration:none;color:#000></a>名前(書き換える)</li>       
+            </ul>
+        </nav>
+    </header>            
+
     <div class="content-wrapper">
         <div class="container">
-            <header class="profile-header">
-                <h1 class="text-start">ゆいキャン</h1>
-            </header>
-            
             <div class="row profile-content">
                 <div class="col-lg-4 col-md-4 col-sm-12 mb-4">
                     <img src="{{ url_for('profile_picture', user_id=user.id) }}" alt="プロフィール写真" class="img-fluid profile-photo">

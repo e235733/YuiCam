@@ -144,9 +144,13 @@ def login_required(f):
 
 def get_faculty_name(faculty_id):
     faculty_dict = {
-        0: '工学部',
-        1: '理学部',
-        2: '経済学部'
+        0: '人文社会学部',
+        1: '国際地域創造学部',
+        2: '教育学部',
+        3: '理学部',
+        4:'医学部',
+        5:'工学部',
+        6:'農学部'
     }
     return faculty_dict.get(faculty_id, '不明な学部')
 
