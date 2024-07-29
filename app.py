@@ -227,10 +227,11 @@ def logout():
 @app.route('/<int:user_id>',methods=['GET','POST'])
 @login_required
 def index(user_id):
+    user = User.query.get(user_id)
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
     users = User.query.all()
-    return render_template('index.html',users=users)
+    return render_template('index.html',users=users,user=user)
 
 # プロフィール詳細
 @app.route('/<int:user_id>/profile_detail', methods=['GET', 'POST'])
@@ -263,15 +264,17 @@ def matching_list(user_id):
         else:
             matched_users.append(User.query.get(match.user1_id))
 
-    return render_template('matching_list.html',matched_users=matched_users)
+    return render_template('matching_list.html',matched_users=matched_users,user=user)
 
 # いいねリスト
 @app.route('/<int:user_id>/like_list',methods=['GET','POST'])
 @login_required
 def like_list(user_id):
+    user = User.query.get(user_id)
+    users = User.query.all()
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
-    return render_template('like_list.html')
+    return render_template('like_list.html',user=user,users=users)
 
 # プロフィール編集
 @app.route('/<int:user_id>/profile_edit', methods=['GET', 'POST'])
@@ -294,7 +297,7 @@ def profile_edit(user_id):
                 user.profile_picture = file.read()
                                      
         db.session.commit()
-        return redirect(url_for('profile_detail', user_id=user.id))
+        return redirect(url_for('profile_detail', user_id=user.id,user=user))
     
     if request.method == 'POST' and not form.validate_on_submit():
         print(f"フォームのデータ: {form.data}")

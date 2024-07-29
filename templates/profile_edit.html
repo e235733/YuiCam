@@ -12,10 +12,10 @@
         <h1 style="margin:0;padding:0;font-size: 20px;">ゆいキャン</h1>
         <nav>
             <ul>
-                <li><a href="like_list.html" style=text-decoration:none;color:#000>いいね</a></li>
-                <li><a href="matching_list.html" style=text-decoration:none;color:#000>マッチング</a></li>
+                <li><a href="{{url_for('like_list',user_id=user.id)}}" style=text-decoration:none;color:#000>いいね</a></li>
+                <li><a href="{{url_for('matching_list',user_id=user.id)}}" style=text-decoration:none;color:#000>マッチング</a></li>
                 <li><a href="{{ url_for('logout') }}" style=text-decoration:none;color:#000>ログアウト</a></li>
-                <li><a href="profile_detail.html" style=text-decoration:none;color:#000></a>名前(書き換える)</li>       
+                <li><a href="{{url_for('profile_detail',user_id=user.id)}}" style=text-decoration:none;color:#000>{{user.query.get(session.get('user_id')).username}}</a></li>       
             </ul>
         </nav>
     </header>
