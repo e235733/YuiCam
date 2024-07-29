@@ -225,14 +225,15 @@ def logout():
     return redirect(url_for('login'))
 
 # お相手一覧
-@app.route('/<int:user_id>',methods=['GET','POST'])
+@app.route('/index', methods=['GET'])
 @login_required
-def index(user_id):
-    user = User.query.get(user_id)
-    if user_id != session.get('user_id'):
+def index():
+    user_id = session.get('user_id')
+    if not user_id:
         return redirect(url_for('login'))
+    user = User.query.get(user_id)
     users = User.query.all()
-    return render_template('index.html',users=users,user=user)
+    return render_template('index.html', users=users, user=user)
 
 # プロフィール詳細
 @app.route('/<int:user_id>/profile_detail', methods=['GET', 'POST'])

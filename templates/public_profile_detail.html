@@ -15,9 +15,8 @@
                 <li><a href="{{ url_for('like_list', user_id=user.id) }}" style="text-decoration:none;color:#000">いいね</a></li>
                 <li><a href="{{ url_for('matching_list', user_id=user.id) }}" style="text-decoration:none;color:#000">マッチング</a></li>
                 {% if session.get('user_id') %}
-                    <li><a href="{{ url_for('logout') }}" style="text-decoration:none;color:#000">ログアウト</a></li>
-                {% endif %}
-                <li><a href="{{ url_for('public_profile_detail', user_id=user.id) }}" style="text-decoration:none;color:#000">{{ session['username'] }}</a></li>
+                <li><a href="{{ url_for('logout') }}" style="text-decoration:none;color:#000">ログアウト</a></li>                {% endif %}
+                <li><a href="{{ url_for('profile_detail', user_id=user.id) }}" style="text-decoration:none;color:#000">{{ session['username'] }}</a></li>
             </ul>
         </nav>
     </header>
@@ -40,7 +39,7 @@
         </div>
     </div>
 
-    <a href="{{ url_for('index', user_id=user.id) }}" class="btn btn-primary btn-sm back-to-list-btn">一覧に戻る</a>
+    <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm back-to-list-btn">一覧に戻る</a>
 
     <footer class="footer">
         <ul class="md-flex">
