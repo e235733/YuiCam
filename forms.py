@@ -5,8 +5,9 @@ from wtforms.fields import (
     FileField, SubmitField
     )
 from wtforms.validators import (
-    Length,DataRequired,Email,EqualTo,NumberRange
+    Length,DataRequired,Email,EqualTo,NumberRange,InputRequired
     )
+from flask_wtf import FlaskForm
 
 #新規登録クラス
 class SigninForm(Form):
@@ -23,11 +24,15 @@ class LoginForm(Form):
 
 
 #プロフィール情報クラス
-class ProfileForm(Form):
-    username = StringField(validators=[DataRequired('名前は必須入力です')])
-    faculty = IntegerField()
-    univ_year = IntegerField()
-    bio = TextAreaField()
-    profile_picture = FileField()
-    submit = SubmitField()
-
+class ProfileForm(FlaskForm):
+    username = StringField('名前', validators=[DataRequired()])
+    faculty = SelectField(
+        '学部',
+        choices=[(0, '工学部'), (1, '理学部'), (2, '経済学部')],
+        coerce=int,
+        validators=[InputRequired()]
+    )
+    univ_year = IntegerField('学年', validators=[DataRequired()])
+    bio = TextAreaField('自己紹介')
+    profile_picture = FileField('プロフィール写真')
+    submit = SubmitField('保存')

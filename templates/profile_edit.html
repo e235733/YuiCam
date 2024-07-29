@@ -1,11 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>プロフィール編集 - ゆいキャン</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    prpfile_edit
+    <div class="content-wrapper">
+        <div class="container">
+            <header class="profile-header">
+                <h1 class="text-start">ゆいキャン</h1>
+            </header>
+
+            {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field, errors in form.errors.items() %}
+                        {% for error in errors %}
+                            <li>{{ field }} - {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            
+            <div class="row profile-content">
+                <div class="col-lg-4 col-md-4 col-sm-12 profile-photo-container mb-4">
+                    <img src="{{ url_for('profile_picture', user_id=user.id) }}" alt="プロフィール写真" class="profile-photo">
+                </div>
+                
+                <div class="col-lg-8 col-md-8 col-sm-12 profile-details">
+                    <form method="POST" enctype="multipart/form-data">
+                        {{ form.csrf_token() }}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">名前:</label>
+                            {{ form.username(class="form-control") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="faculty" class="form-label">学部:</label>
+                            {{ form.faculty(class="form-control") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="univ_year" class="form-label">学年:</label>
+                            {{ form.univ_year(class="form-control") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="bio" class="form-label">自己紹介:</label>
+                            {{ form.bio(class="form-control") }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="profile_picture" class="form-label">プロフィール写真:</label>
+                            {{ form.profile_picture() }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>            
+            </div>
+
+            <a href="{{ url_for('index', user_id=user.id) }}" class="btn btn-primary back-to-list-btn">一覧に戻る</a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p class="text-center mb-0">&copy; 2023 ゆいキャン</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

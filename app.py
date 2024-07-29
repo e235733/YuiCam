@@ -1,10 +1,14 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for,flash, session
+from flask import Flask, render_template, request, redirect, url_for,flash, session, Response, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import UserMixin
+from flask_wtf import FlaskForm
+from wtforms.validators import DataRequired
+from wtforms import StringField, TextAreaField, SubmitField
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from werkzeug.utils import secure_filename
 
 from forms import SigninForm,LoginForm,ProfileForm
 
@@ -12,6 +16,17 @@ from forms import SigninForm,LoginForm,ProfileForm
 # インスタンス生成
 # ==================================================
 app = Flask(__name__)
+
+# ==================================================
+# 画像の処理
+# ==================================================
+# アップロード先のディレクトリを指定
+app.config['UPLOAD_FOLDER'] = os.path.join(app.root_path,'static/uploads')
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 # ==================================================
 # Flaskに対する設定
@@ -128,6 +143,14 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
+def get_faculty_name(faculty_id):
+    faculty_dict = {
+        0: '工学部',
+        1: '理学部',
+        2: '経済学部'
+    }
+    return faculty_dict.get(faculty_id, '不明な学部')
+
 # ==================================================
 # ルーティング
 # ==================================================
@@ -207,12 +230,15 @@ def index(user_id):
     return render_template('index.html',users=users)
 
 # プロフィール詳細
-@app.route('/<int:user_id>/profile_detail',methods=['GET','POST'])
+@app.route('/<int:user_id>/profile_detail', methods=['GET', 'POST'])
 @login_required
 def profile_detail(user_id):
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
-    return render_template('profile_detail.html')
+    user = User.query.get_or_404(user_id)
+    faculty_name = get_faculty_name(user.faculty)
+
+    return render_template('profile_detail.html', user=user, faculty_name=faculty_name)
 
 # マッチングリスト
 @app.route('/<int:user_id>/matching_list')
@@ -245,12 +271,40 @@ def like_list(user_id):
     return render_template('like_list.html')
 
 # プロフィール編集
-@app.route('/<int:user_id>/profile_edit',methods=['GET','POST'])
+@app.route('/<int:user_id>/profile_edit', methods=['GET', 'POST'])
 @login_required
 def profile_edit(user_id):
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
-    return render_template('profile_edit.html')
+    user = User.query.get_or_404(user_id)
+    form = ProfileForm(obj=user)
+    
+    if form.validate_on_submit():
+        user.username = form.username.data
+        user.faculty = form.faculty.data
+        user.univ_year = form.univ_year.data
+        user.bio = form.bio.data
+        
+        if form.profile_picture.data:
+            file = form.profile_picture.data
+            if allowed_file(file.filename):
+                user.profile_picture = file.read()
+                                     
+        db.session.commit()
+        return redirect(url_for('profile_detail', user_id=user.id))
+    
+    if request.method == 'POST' and not form.validate_on_submit():
+        print(f"フォームのデータ: {form.data}")
+        print(f"バリデーションエラー: {form.errors}")
+    
+    return render_template('profile_edit.html', form=form, user=user)
+
+@app.route('/profile_picture/<int:user_id>')
+def profile_picture(user_id):
+    user = User.query.get_or_404(user_id)
+    if user.profile_picture:
+        return Response(user.profile_picture, mimetype='image/jpeg')  # MIMEタイプは適切に設定
+    return send_file('static/uploads/placeholder.jpg')
 
 @app.route('/like/<int:liked_id>', methods=['POST'])
 @login_required
@@ -276,8 +330,6 @@ def like(liked_id):
     #     flash('Like removed.')
 
     return redirect(url_for('index', user_id=user_id))
-
-
 # ==================================================
 # 実行
 # ==================================================
