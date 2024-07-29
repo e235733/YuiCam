@@ -15,7 +15,7 @@
         {% endif %}
         <div class="col-md-4 mb-4">
           <div class="card">
-            <img src="https://placehold.jp/150x100.png" class="card-img-top" alt="...">
+            <img src="{{url_for('profile_picture',user_id=user.id )}}" class="card-img-top" alt="...">
             <div class="card-body">
               <h5 class="card-title">{{user.username}}</h5>
               <p class="card-text">{{user.email}}</p>

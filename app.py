@@ -179,7 +179,7 @@ def signin():
             return redirect(url_for('signin'))
 
         #新しいユーザーの作成
-        new_user = User(username=username,email=email,faculty=0,univ_year=1)
+        new_user = User(username=username,email=email,faculty=0,univ_year=1,profile_picture='static/uploads/placeholder.jpg')
         new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()

@@ -8,6 +8,8 @@ from wtforms.validators import (
     Length,DataRequired,Email,EqualTo,NumberRange,InputRequired
     )
 
+from flask_wtf import FlaskForm
+
 #新規登録クラス
 class SigninForm(Form):
     username = StringField(validators=[DataRequired('名前は必須入力です')])
@@ -23,7 +25,7 @@ class LoginForm(Form):
 
 
 #プロフィール情報クラス
-class ProfileForm(Form):
+class ProfileForm(FlaskForm):
     username = StringField('名前', validators=[DataRequired()])
     faculty = SelectField(
         '学部',
