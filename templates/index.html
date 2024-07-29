@@ -14,5 +14,20 @@
     {% if 'user_id' in session %}
         <a class="nav-link" href="{{ url_for('logout') }}">ログアウト</a>
     {% endif %}
+
+    <!-- User list item -->
+    {% for user in users %}
+    <div class="user-item">
+        <p>{{ user.username }}</p>
+        <form method="POST" action="{{ url_for('like', liked_id=user.id) }}">
+            {% if user.query.get(session.get('user_id')).has_liked(user) %}    <!--ここ -->
+            <button type="submit" class="btn btn-danger">いいねを取り消す</button>
+            {% else %}
+            <button type="submit" class="btn btn-primary">いいね</button>
+            {% endif %}
+        </form>
+    </div>
+{% endfor %}
+
 </body>
 </html>

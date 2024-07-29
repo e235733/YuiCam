@@ -69,12 +69,32 @@ class User(UserMixin, db.Model):
 
     def unlike(self, user):
         Like.query.filter_by(liker_id=self.id, liked_id=user.id).delete()
+
+         # マッチが存在するかチェック
+        match = Match.query.filter(
+            db.or_(
+                db.and_(Match.user1_id == self.id, Match.user2_id == user.id),
+                db.and_(Match.user1_id == user.id, Match.user2_id == self.id)
+            )
+        ).first()
+
+        if match:
+            db.session.delete(match)
+            
         db.session.commit()
 
     def has_liked(self, user):
         return Like.query.filter(
             Like.liker_id == self.id,
             Like.liked_id == user.id).count() > 0
+    
+    def toggle_like(self, user):
+        if self.has_liked(user):
+            self.unlike(user)
+            return False
+        else:
+            self.like(user)
+            return True
 
 class Like(db.Model):
     __tablename__ = 'like'
@@ -200,7 +220,21 @@ def profile_detail(user_id):
 def matching_list(user_id):
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
-    return render_template('matching_list.html')
+
+    user = User.query.get(user_id)
+    if not user:
+        flash('User not found.')
+        return redirect(url_for('login'))
+
+    # マッチしたユーザーを取得
+    matched_users = []
+    for match in user.matches:
+        if match.user1_id == user.id:
+            matched_users.append(User.query.get(match.user2_id))
+        else:
+            matched_users.append(User.query.get(match.user1_id))
+
+    return render_template('matching_list.html',matched_users=matched_users)
 
 # いいねリスト
 @app.route('/<int:user_id>/like_list',methods=['GET','POST'])
@@ -217,6 +251,32 @@ def profile_edit(user_id):
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
     return render_template('profile_edit.html')
+
+@app.route('/like/<int:liked_id>', methods=['POST'])
+@login_required
+def like(liked_id):
+    user_id = session.get('user_id')
+    if not user_id:
+        return redirect(url_for('login'))
+
+    user = User.query.get(user_id)
+    liked_user = User.query.get(liked_id)
+
+    if not user or not liked_user:
+        # flash('User not found.')
+        return redirect(url_for('index', user_id=user_id))
+
+    if user.toggle_like(liked_user):
+        if liked_user.has_liked(user):
+            Match.create_match(user, liked_user)
+            # flash('It\'s a match!')
+    #     else:
+    #         flash('Liked.')
+    # else:
+    #     flash('Like removed.')
+
+    return redirect(url_for('index', user_id=user_id))
+
 
 # ==================================================
 # 実行
