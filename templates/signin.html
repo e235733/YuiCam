@@ -16,29 +16,29 @@
     <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
         <h1 class="mb-4">新規登録</h1>
         <p class="mb-4">情報を入力してください。</p>
-        <form class="w-100" style="max-width: 400px;">
+        <form method="POST" action="{{url_for('signin')}}" class="w-100" style="max-width: 400px;">
             <div class="mb-3">
-                <label for="password" class="form-label">ユーザーネーム</label>
-                <input type="password" class="form-control" id="password" placeholder="password" required>
+                <label for="username" class="form-label">ユーザーネーム</label>
+                <input type="text" class="form-control" id="username" name="username" placeholder="username" required>
                 <div class="invalid-feedback">
                     ユーザーネームを入力してください。
                 </div>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">メールアドレス</label>
-                <input type="email" class="form-control" id="email" placeholder="username" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="email" required>
                 <div class="invalid-feedback">
                     有効なメールアドレスを入力してください。
                 </div>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">パスワード</label>
-                <input type="password" class="form-control" id="password" placeholder="password" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
                 <div class="invalid-feedback">
                     パスワードを入力してください。
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary w-100">ログイン</button>
+            <button type="submit" class="btn btn-primary w-100">サインイン</button>
         </form>
         <footer class="mt-4">
             <p class="text-center">&copy; 2024 ゆいキャン</p>

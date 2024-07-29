@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from forms import SigninForm,LoginForm,ProfileForm
 
 # ==================================================
 # インスタンス生成
@@ -109,9 +110,31 @@ def base():
 
 
 # 新規登録
-@app.route('/signin')
+@app.route('/signin',methods=['GET','POST'])
 def signin():
-    return render_template('signin.html',methods=['GET','POST'])
+    #フォームの作成
+    form = SigninForm(request.form)
+    #POST
+    if request.method == "POST" and form.validate():
+        username = request.form['username']    #['username']はHTMLフォームの入力フィールドのname属性から来ている
+        email = request.form['email']
+        password = request.form['password']  
+
+        existing_user = User.query.filter_by(email=email).first()
+        if existing_user:
+            # エラーメッセージをフラッシュしてリダイレクト
+            # flash('Email address already exists')
+            return redirect(url_for('signin'))
+
+        #新しいユーザーの作成
+        new_user = User(username=username,email=email,faculty=0,univ_year=1)
+        new_user.set_password(password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return redirect(url_for('index',user_id=new_user.id))
+        
+    return render_template('signin.html',form=form)
 
 # ログイン
 @app.route('/login',methods=['GET','POST'])
@@ -120,8 +143,9 @@ def login():
 
 # お相手一覧
 @app.route('/<int:user_id>',methods=['GET','POST'])
-def index():
-    return render_template('index.html')
+def index(user_id):
+    users = User.query.all()
+    return render_template('index.html',users=users)
 
 # プロフィール詳細
 @app.route('/<int:user_id>/profile_detail',methods=['GET','POST'])

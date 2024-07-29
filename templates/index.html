@@ -6,6 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    Good Night
+    サインイン成功しました。
+    {% for user in users %}
+        <p>{{user.id}}:{{user.username}} {{user.email}}</p>
+        
+    {% endfor %}
 </body>
 </html>
