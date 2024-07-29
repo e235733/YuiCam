@@ -210,6 +210,7 @@ def login():
             return redirect(url_for('login'))
         
         session['user_id'] = user.id
+        session['username'] = user.username
 
         return redirect(url_for('index',user_id=user.id))
         
