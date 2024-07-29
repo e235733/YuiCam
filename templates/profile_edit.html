@@ -16,6 +16,7 @@
                 <li><a href="{{url_for('matching_list',user_id=user.id)}}" style=text-decoration:none;color:#000>マッチング</a></li>
                 <li><a href="{{ url_for('logout') }}" style=text-decoration:none;color:#000>ログアウト</a></li>
                 <li><a href="{{url_for('profile_detail',user_id=user.id)}}" style=text-decoration:none;color:#000>{{user.query.get(session.get('user_id')).username}}</a></li>       
+                <li><a href="{{ url_for('profile_detail', user_id=user.id) }}" style="text-decoration:none;color:#000">{{ user.username }}</a></li>
             </ul>
         </nav>
     </header>

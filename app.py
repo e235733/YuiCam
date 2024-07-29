@@ -237,6 +237,15 @@ def index(user_id):
 @app.route('/<int:user_id>/profile_detail', methods=['GET', 'POST'])
 @login_required
 def profile_detail(user_id):
+    user = User.query.get_or_404(user_id)
+    form = ProfileForm(obj=user)
+    
+    if form.validate_on_submit():
+        user.username = form.username.data
+        user.faculty = form.faculty.data
+        user.univ_year = form.univ_year.data
+        user.bio = form.bio.data
+    
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
     user = User.query.get_or_404(user_id)
@@ -334,8 +343,15 @@ def like(liked_id):
     #         flash('Liked.')
     # else:
     #     flash('Like removed.')
-
     return redirect(url_for('index', user_id=user_id))
+
+# 読み取り専用のプロフィール詳細ページ
+@app.route('/profile/<int:user_id>', methods=['GET'])
+def public_profile_detail(user_id):
+    user = User.query.get_or_404(user_id)
+    faculty_name = get_faculty_name(user.faculty)
+    return render_template('public_profile_detail.html', user=user, faculty_name=faculty_name)
+
 # ==================================================
 # 実行
 # ==================================================

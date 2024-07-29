@@ -81,14 +81,11 @@ body {
     margin-bottom: 20px;
 }
 
-footer {
-    flex-shrink: 0;
-    background: #f8f9fa;
-    padding: 10px 0;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-}
+  .footer a:hover {
+    color: #000;
+  }
+
+
 
 @media (max-width: 768px) {
     .profile-photo-container {
@@ -98,6 +95,19 @@ footer {
     .content-wrapper {
         padding-bottom: 60px; /* フッターの高さ分のパディング */
     }
+
+    .footer {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .md-flex {
+        display: flex;
+      }
+    
+      .md-flex li + li {
+        margin-left: 16px;
+      }
 }
 
 .profile-photo {
@@ -118,10 +128,13 @@ footer {
 
 .footer {
     width: 100%;
-    background: #f8f9fa;
+    background: #fff;
+    color: #999;
     padding: 10px 0;
     position: fixed;
     bottom: 0;
+    font-size: 15px;
+    border-top: 1px solid #e5e7eb;
 }
 
 .c-grid {

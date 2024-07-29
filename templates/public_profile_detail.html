@@ -12,14 +12,15 @@
         <h1 style="margin:0;padding:0;font-size: 20px;">ゆいキャン</h1>
         <nav>
             <ul>
-                <li><a href="{{url_for('like_list',user_id=user.id)}}" style=text-decoration:none;color:#000>いいね</a></li>
-                <li><a href="{{url_for('matching_list',user_id=user.id)}}" style=text-decoration:none;color:#000>マッチング</a></li>
-                <li><a href="{{ url_for('logout') }}" style=text-decoration:none;color:#000>ログアウト</a></li>
-                <li><a href="{{url_for('profile_detail',user_id=user.id)}}" style=text-decoration:none;color:#000>{{user.query.get(session.get('user_id')).username}}</a></li>       
-                <li><a href="{{ url_for('profile_detail', user_id=user.id) }}" style="text-decoration:none;color:#000">{{ user.username }}</a></li>
+                <li><a href="{{ url_for('like_list', user_id=user.id) }}" style="text-decoration:none;color:#000">いいね</a></li>
+                <li><a href="{{ url_for('matching_list', user_id=user.id) }}" style="text-decoration:none;color:#000">マッチング</a></li>
+                {% if session.get('user_id') %}
+                    <li><a href="{{ url_for('logout') }}" style="text-decoration:none;color:#000">ログアウト</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('public_profile_detail', user_id=user.id) }}" style="text-decoration:none;color:#000">{{ user.username }}</a></li>
             </ul>
         </nav>
-    </header>            
+    </header>
 
     <div class="content-wrapper">
         <div class="container">
@@ -34,7 +35,6 @@
                     <hr>
                     <h3>自己紹介</h3>
                     <p>{{ user.bio }}</p>
-                    <a href="{{ url_for('profile_edit', user_id=user.id) }}" class="btn btn-primary">編集する</a>
                 </div>
             </div>
         </div>
@@ -50,6 +50,6 @@
         </ul>
         <p class="copyright">© 2023 Example Inc. All Rights Reserved.</p>
       </footer>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
