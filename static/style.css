@@ -12,6 +12,7 @@ header {
     z-index: 999;
     display: flex;
     align-items: center;
+    margin-bottom: 20px;
 
 }
 h1 {
@@ -98,9 +99,21 @@ body {
 
     .footer {
         display: flex;
-        justify-content: space-between;
-      }
+        flex-direction: column; /* 縦に並べる */
+        align-items: center; /* 中央揃え */
+    }
 
+    .footer ul {
+        display: flex;
+        flex-direction: column; /* 縦に並べる */
+        align-items: center; /* 中央揃え */
+        padding: 0;
+        margin: 0;
+    }
+
+    .footer li {
+        margin: 10px 0; /* 縦方向の間隔調整 */
+    }
       .md-flex {
         display: flex;
       }
@@ -135,6 +148,30 @@ body {
     bottom: 0;
     font-size: 15px;
     border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 中央揃え */
+    justify-content: center; /* 垂直方向の中央揃え */
+}
+
+.footer ul {
+    display: flex;
+    justify-content: center; /* 横方向の中央揃え */
+    padding: 0;
+    margin: 0;
+}
+
+.footer li {
+    margin: 0 10px; /* リストアイテムの間隔調整 */
+}
+
+.footer a {
+    text-decoration: none;
+    color: #4b4b4b;
+}
+
+.footer a:hover {
+    color: #000;
 }
 
 .c-grid {

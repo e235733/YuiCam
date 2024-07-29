@@ -9,15 +9,13 @@
 </head>
 <body>
     <header>
-        <h1 style="margin:0;padding:0;font-size: 20px;">ゆいキャン</h1>
+        <h1 style="margin:0;padding:0;font-size: 20px;"><a href="{{url_for('index')}}" style=text-decoration:none;color:#000>ゆいキャン</a></h1>
         <nav>
             <ul>
-                <li><a href="{{ url_for('like_list', user_id=user.id) }}" style="text-decoration:none;color:#000">いいね</a></li>
-                <li><a href="{{ url_for('matching_list', user_id=user.id) }}" style="text-decoration:none;color:#000">マッチング</a></li>
-                {% if session.get('user_id') %}
-                <li><a href="{{ url_for('logout') }}" style="text-decoration:none;color:#000">ログアウト</a></li>                
-                {% endif %}
-                <li><a href="{{ url_for('index') }}" style="text-decoration:none;color:#000">{{ current_user.username }}</a></li>
+                <li><a href="{{url_for('like_list',user_id=user.id)}}" style=text-decoration:none;color:#000>いいね</a></li>
+                <li><a href="{{url_for('matching_list',user_id=user.id)}}" style=text-decoration:none;color:#000>マッチング</a></li>
+                <li><a href="{{ url_for('logout') }}" style=text-decoration:none;color:#000>ログアウト</a></li>
+                <li><a href="{{url_for('profile_detail',user_id=user.id)}}" style=text-decoration:none;color:#000>{{session['username']}}</a></li>       
             </ul>
         </nav>
     </header>

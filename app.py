@@ -65,10 +65,12 @@ class User(UserMixin, db.Model):
     # リレーションシップ
     likes_given = db.relationship('Like', foreign_keys='Like.liker_id', backref='liker', lazy='dynamic')
     likes_received = db.relationship('Like', foreign_keys='Like.liked_id', backref='liked', lazy='dynamic')
-    matches = db.relationship('Match', 
-                              primaryjoin="or_(Match.user1_id==User.id, Match.user2_id==User.id)",
-                              backref='users', lazy='dynamic')
-
+    matches = db.relationship(
+        'Match',
+        primaryjoin="or_(foreign(Match.user1_id) == User.id, foreign(Match.user2_id) == User.id)",
+        backref='users',
+        lazy='dynamic'
+    )    
     def set_password(self, password):
         self.password = generate_password_hash(password)
 
@@ -121,7 +123,6 @@ class Like(db.Model):
 class Match(db.Model):
     __tablename__ = 'match'
     
-    # Matchテーブル
     id = db.Column(db.Integer, primary_key=True)
     user1_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user2_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -132,7 +133,7 @@ class Match(db.Model):
         db.session.add(match)
         db.session.commit()
         return match
-
+    
 #ユーザーがログインしているか確認するセッション管理
 def login_required(f):
     @wraps(f)
@@ -260,12 +261,16 @@ def profile_detail(user_id):
 @app.route('/<int:user_id>/matching_list')
 @login_required
 def matching_list(user_id):
-    if user_id != session.get('user_id'):
-        return redirect(url_for('login'))
-
     user = User.query.get(user_id)
     if not user:
         flash('User not found.')
+        return redirect(url_for('login'))
+
+    # 現在のログインユーザーのIDをセッションから取得
+    current_user_id = session.get('user_id')
+    current_user = User.query.get(current_user_id)
+    if not current_user:
+        flash('Current user not found.')
         return redirect(url_for('login'))
 
     # マッチしたユーザーを取得
@@ -276,7 +281,7 @@ def matching_list(user_id):
         else:
             matched_users.append(User.query.get(match.user1_id))
 
-    return render_template('matching_list.html',matched_users=matched_users,user=user)
+    return render_template('matching_list.html', matches=matched_users, user=user, current_user=current_user)
 
 #いいねリスト
 @app.route('/<int:user_id>/like_list', methods=['GET'])
@@ -344,17 +349,15 @@ def like(liked_id):
     liked_user = User.query.get(liked_id)
 
     if not user or not liked_user:
-        # flash('User not found.')
         return redirect(url_for('index', user_id=user_id))
 
     if user.toggle_like(liked_user):
         if liked_user.has_liked(user):
             Match.create_match(user, liked_user)
-            # flash('It\'s a match!')
-    #     else:
-    #         flash('Liked.')
-    # else:
-    #     flash('Like removed.')
+            flash('It\'s a match!')
+    else:
+        flash('Like removed.')
+
     return redirect(url_for('index', user_id=user_id))
 
 # 読み取り専用のプロフィール詳細ページ
