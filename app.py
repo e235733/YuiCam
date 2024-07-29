@@ -2,7 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for,flash, session, Response, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from wtforms.validators import DataRequired
 from wtforms import StringField, TextAreaField, SubmitField
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -278,15 +278,24 @@ def matching_list(user_id):
 
     return render_template('matching_list.html',matched_users=matched_users,user=user)
 
-# いいねリスト
-@app.route('/<int:user_id>/like_list',methods=['GET','POST'])
+#いいねリスト
+@app.route('/<int:user_id>/like_list', methods=['GET'])
 @login_required
 def like_list(user_id):
-    user = User.query.get(user_id)
-    users = User.query.all()
     if user_id != session.get('user_id'):
         return redirect(url_for('login'))
-    return render_template('like_list.html',user=user,users=users)
+
+    user = User.query.get(user_id)
+    if not user:
+        flash('User not found.')
+        return redirect(url_for('login'))
+
+    # 現在のユーザーに「いいね！」を送ったユーザーを取得
+    liked_users = User.query.join(Like, Like.liker_id == User.id).filter(Like.liked_id == user.id).all()
+    user_faculty_name = get_faculty_name(user.faculty)
+
+    return render_template('like_list.html', liked_users=liked_users, user=user, faculty_name=user_faculty_name)
+
 
 # プロフィール編集
 @app.route('/<int:user_id>/profile_edit', methods=['GET', 'POST'])
