@@ -84,11 +84,9 @@ body {
     margin-bottom: 20px;
 }
 
-  .footer a:hover {
+.footer a:hover {
     color: #000;
-  }
-
-
+}
 
 @media (max-width: 768px) {
     .profile-photo-container {
@@ -116,13 +114,13 @@ body {
     .footer li {
         margin: 10px 0; /* 縦方向の間隔調整 */
     }
-      .md-flex {
+    .md-flex {
         display: flex;
-      }
-    
-      .md-flex li + li {
+    }
+
+    .md-flex li + li {
         margin-left: 16px;
-      }
+    }
 }
 
 .profile-photo {
@@ -159,6 +157,7 @@ body {
     flex-direction: column;
     align-items: center; /* 中央揃え */
     justify-content: center; /* 垂直方向の中央揃え */
+    flex-shrink: 0;
 }
 
 .footer ul {
@@ -186,9 +185,9 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 50px;
     margin-bottom: 20px;
-  }
-  
-  .c-grid__item {
+}
+
+.c-grid__item {
     width: 400px;
     height: 300px;
     background: #00bfff;
@@ -196,9 +195,9 @@ body {
     display: grid;
     justify-content: center;
     align-content: center;
-  }
+}
 
-  .btn {
-    float:right;
+.btn {
+    float: right;
     border-radius: 30px;
-  }
+}
