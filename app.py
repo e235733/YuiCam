@@ -2,12 +2,9 @@ import os
 from flask import Flask, render_template, request, redirect, url_for,flash, session, Response, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_login import UserMixin, current_user
-from wtforms.validators import DataRequired
-from wtforms import StringField, TextAreaField, SubmitField
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from werkzeug.utils import secure_filename
 
 from forms import SigninForm,LoginForm,ProfileForm
 
@@ -45,9 +42,6 @@ Migrate(app, db)
 #==================================================
 # データベース(モデル)
 #==================================================
-#@login_manager.user_loader
-#def load_user(user_id):
-#    return User.query.get(int(user_id))
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -212,7 +206,7 @@ def login():
         
         if user is None or not user.check_password(password):
             #エラーメッセージをフラッシュしてリダイレクト
-            flash('Invalid email or password')
+            # flash('Invalid email or password')
             return redirect(url_for('login'))
         
         session['user_id'] = user.id
@@ -394,4 +388,4 @@ def public_profile_detail(user_id):
 # 実行
 # ==================================================
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

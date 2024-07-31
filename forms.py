@@ -1,11 +1,10 @@
 from wtforms import Form
 from wtforms.fields import (
-    StringField, IntegerField, PasswordField, DateField, 
-    RadioField, SelectField, BooleanField, TextAreaField,
-    FileField, SubmitField
+    StringField, IntegerField, PasswordField, SelectField, 
+    TextAreaField, FileField, SubmitField
     )
 from wtforms.validators import (
-    Length,DataRequired,Email,EqualTo,NumberRange,InputRequired
+    DataRequired,Email,InputRequired
     )
 
 from flask_wtf import FlaskForm
