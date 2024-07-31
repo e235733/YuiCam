@@ -216,7 +216,7 @@ def login():
             return redirect(url_for('login'))
         
         session['user_id'] = user.id
-        session['username'] = user.username
+        session['username'] = user.query.get(session.get('user_id')).username
 
         return redirect(url_for('index',user_id=user.id))
         
@@ -239,7 +239,6 @@ def index():
         return redirect(url_for('login'))
     user = User.query.get(user_id)
     users = User.query.all()
-    # faculty_name = get_faculty_name(user.faculty)
     return render_template('index.html', users=users, user=user)
 
 # プロフィール詳細
@@ -260,7 +259,11 @@ def profile_detail(user_id):
     user = User.query.get_or_404(user_id)
     faculty_name = get_faculty_name(user.faculty)
 
-    return render_template('profile_detail.html', user=user, faculty_name=faculty_name)
+    # 現在のログインユーザーのIDをセッションから取得
+    current_user_id = session.get('user_id')
+    current_user = User.query.get(current_user_id) 
+
+    return render_template('profile_detail.html', user=user, faculty_name=faculty_name,current_user=current_user)
 
 # マッチングリスト
 @app.route('/<int:user_id>/matching_list')
@@ -273,7 +276,7 @@ def matching_list(user_id):
 
     # 現在のログインユーザーのIDをセッションから取得
     current_user_id = session.get('user_id')
-    current_user = User.query.get(current_user_id)
+    current_user = User.query.get(current_user_id)              
     if not current_user:
         flash('Current user not found.')
         return redirect(url_for('login'))
@@ -304,7 +307,11 @@ def like_list(user_id):
     liked_users = User.query.join(Like, Like.liker_id == User.id).filter(Like.liked_id == user.id).all()
     user_faculty_name = get_faculty_name(user.faculty)
 
-    return render_template('like_list.html', liked_users=liked_users, user=user, faculty_name=user_faculty_name)
+    # 現在のログインユーザーのIDをセッションから取得
+    current_user_id = session.get('user_id')
+    current_user = User.query.get(current_user_id) 
+
+    return render_template('like_list.html', liked_users=liked_users, user=user, faculty_name=user_faculty_name,current_user=current_user)
 
 
 # プロフィール編集
@@ -328,13 +335,18 @@ def profile_edit(user_id):
                 user.profile_picture = file.read()
                                      
         db.session.commit()
+        # session['username'] = user.query.get(session.get('user_id')).username
         return redirect(url_for('profile_detail', user_id=user.id,user=user))
     
     if request.method == 'POST' and not form.validate_on_submit():
         print(f"フォームのデータ: {form.data}")
         print(f"バリデーションエラー: {form.errors}")
+
+    # 現在のログインユーザーのIDをセッションから取得
+    current_user_id = session.get('user_id')
+    current_user = User.query.get(current_user_id) 
     
-    return render_template('profile_edit.html', form=form, user=user)
+    return render_template('profile_edit.html', form=form, user=user,current_user=current_user)
 
 @app.route('/profile_picture/<int:user_id>')
 def profile_picture(user_id):
