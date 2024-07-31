@@ -178,8 +178,6 @@ def signin():
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            # エラーメッセージをフラッシュしてリダイレクト
-            flash('Email address already exists')
             return redirect(url_for('signin'))
 
         #新しいユーザーの作成
@@ -205,7 +203,6 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if user is None or not user.check_password(password):
-            #エラーメッセージをフラッシュしてリダイレクト
             # flash('Invalid email or password')
             return redirect(url_for('login'))
         
@@ -265,14 +262,12 @@ def profile_detail(user_id):
 def matching_list(user_id):
     user = User.query.get(user_id)
     if not user:
-        flash('User not found.')
         return redirect(url_for('login'))
 
     # 現在のログインユーザーのIDをセッションから取得
     current_user_id = session.get('user_id')
     current_user = User.query.get(current_user_id)              
     if not current_user:
-        flash('Current user not found.')
         return redirect(url_for('login'))
 
     # マッチしたユーザーを取得
@@ -294,7 +289,6 @@ def like_list(user_id):
 
     user = User.query.get(user_id)
     if not user:
-        flash('User not found.')
         return redirect(url_for('login'))
 
     # 現在のユーザーに「いいね！」を送ったユーザーを取得
@@ -365,11 +359,7 @@ def like(liked_id):
     if user.toggle_like(liked_user):
         if liked_user.has_liked(user):
             Match.create_match(user, liked_user)
-            flash('It\'s a match!')
-    else:
-        flash('Like removed.')
 
-    # return redirect(url_for('index', user_id=user_id))
     return redirect(request.referrer)
 
 # 読み取り専用のプロフィール詳細ページ
