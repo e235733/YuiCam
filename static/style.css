@@ -203,3 +203,7 @@ body {
     float: right;
     border-radius: 30px;
 }
+
+.card-body{
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
