@@ -28,7 +28,7 @@
             <div class="col-md-4 mb-4">
                 <a href="{{ url_for('public_profile_detail', user_id=user.id) }}" class="card-link">
                 <div class="card">
-                  <img src="{{ url_for('profile_picture', user_id=user.id) }}" class="card-img-top" alt="プロフィール写真" width="400" height="300">
+                  <img src="{{ url_for('profile_picture', user_id=user.id) }}" class="card-img-top" alt="プロフィール写真" width="400" height="300" object-fit: cover>
                   <div class="card-body">
                     <h5 class="card-title">{{ user.username }}</h5>
                     <p class="card-text">{{get_faculty_name(user.faculty)}}　{{ user.univ_year }}年生</p>

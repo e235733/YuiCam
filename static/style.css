@@ -131,6 +131,12 @@ body {
     object-fit: cover;
 }
 
+.card-img-top {
+    width: 300;
+    height: 400px; /* 固定の高さ */
+    object-fit: cover; /* 画像のアスペクト比を維持しつつ、枠に収める */
+  }
+
 .back-to-list-btn {
     position: fixed;
     bottom: 60px;
