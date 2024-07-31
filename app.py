@@ -358,7 +358,8 @@ def like(liked_id):
     else:
         flash('Like removed.')
 
-    return redirect(url_for('index', user_id=user_id))
+    # return redirect(url_for('index', user_id=user_id))
+    return redirect(request.referrer)
 
 # 読み取り専用のプロフィール詳細ページ
 @app.route('/profile/<int:user_id>', methods=['GET'])

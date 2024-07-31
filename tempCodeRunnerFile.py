@@ -1,0 +1,1 @@
+return redirect(url_for('index', user_id=user_id))
