@@ -9,47 +9,52 @@
 </head>
 <body>
     <header>
-        <h1 style="margin:0;padding:0;font-size: 20px;"><a href="{{url_for('index')}}" style=text-decoration:none;color:#000>ゆいキャン</a></h1>
+        <h1 style="margin:0;padding:0;font-size: 20px;"><a href="{{url_for('index')}}">ゆいキャン</a></h1>
         <nav>
             <ul>
-                <li><a href="{{url_for('like_list',user_id=user.id)}}" style=text-decoration:none;color:#000>いいね</a></li>
-                <li><a href="{{url_for('matching_list',user_id=user.id)}}" style=text-decoration:none;color:#000>マッチング</a></li>
-                <li><a href="{{ url_for('logout') }}" style=text-decoration:none;color:#000>ログアウト</a></li>
-                <li><a href="{{url_for('profile_detail',user_id=user.id)}}" style=text-decoration:none;color:#000>{{user.username}}</a></li>       
+                <li><a href="{{url_for('like_list', user_id=user.id)}}" style="text-decoration:none;color:#000;">いいね</a></li>
+                <li><a href="{{url_for('matching_list', user_id=user.id)}}" style="text-decoration:none;color:#000;">マッチング</a></li>
+                <li><a href="{{ url_for('logout') }}" style="text-decoration:none;color:#000;">ログアウト</a></li>
+                <li><a href="{{url_for('profile_detail', user_id=user.id)}}" style="text-decoration:none;color:#000;">{{user.username}}</a></li>       
             </ul>
         </nav>
     </header>
   <div class="container">
     <div class="row">
       {% for user in users %}
-            {% if loop.index0 % 3 == 0 and not loop.first %}
-              </div><div class="row">
-            {% endif %}
-            <div class="col-md-4 mb-4">
-                {% if user.id != session.get('user_id') %}
-                {% else %}
-                {% endif %}
-                <a href="{{ url_for('public_profile_detail', user_id=user.id) }}" class="card-link">
-                <div class="card">
-                  <img src="{{ url_for('profile_picture', user_id=user.id) }}" class="card-img-top" alt="プロフィール写真" width="400" height="300" object-fit: cover>
-                  <div class="card-body">
-                    <h5 class="card-title">{{ user.username }}</h5>
-                    <p class="card-text">{{get_faculty_name(user.faculty)}}　{{ user.univ_year }}年生</p>
-                    {% if user.id != session.get('user_id') %}
-                        <form method="POST" action="{{ url_for('like', liked_id=user.id) }}">
-                            {% if user.query.get(session.get('user_id')).has_liked(user) %}   
-                                <button type="submit" class="btn btn-primary">いいね</button>
-                            {% else %}
-                                <button type="submit" class="btn btn-outline-primary">いいね</button>
-                            {% endif %}
-                        </form>
-                    {%else%} 
-                        <a href="{{ url_for('profile_edit', user_id=user.id) }}" class="btn btn-outline-primary" style="display: inline-block; margin-top: 15px;">編集する</a>
+        {% if user.id != session.get('user_id') %}
+          <div class="col-md-4 mb-4">
+            <a href="{{ url_for('public_profile_detail', user_id=user.id) }}" class="card-link">
+              <div class="card">
+                <img src="{{ url_for('profile_picture', user_id=user.id) }}" class="card-img-top" alt="プロフィール写真" width="400" height="300" object-fit: cover>
+                <div class="card-body">
+                  <h5 class="card-title">{{ user.username }}</h5>
+                  <p class="card-text">{{get_faculty_name(user.faculty)}}　{{ user.univ_year }}年生</p>
+                  <form method="POST" action="{{ url_for('like', liked_id=user.id) }}">
+                    {% if user.query.get(session.get('user_id')).has_liked(user) %}   
+                      <button type="submit" class="btn btn-primary">いいね</button>
+                    {% else %}
+                      <button type="submit" class="btn btn-outline-primary">いいね</button>
                     {% endif %}
-                  </div>
+                  </form>
                 </div>
-                </a>
-            </div>
+              </div>
+            </a>
+          </div>
+        {% else %}
+          <div class="col-md-4 mb-4">
+            <a href="{{ url_for('profile_detail', user_id=user.id) }}" class="card-link">
+              <div class="card">
+                <img src="{{ url_for('profile_picture', user_id=user.id) }}" class="card-img-top" alt="プロフィール写真" width="400" height="300" object-fit: cover>
+                <div class="card-body">
+                  <h5 class="card-title">{{ user.username }}</h5>
+                  <p class="card-text">{{get_faculty_name(user.faculty)}}　{{ user.univ_year }}年生</p>
+                  <a href="{{ url_for('profile_edit', user_id=user.id) }}" class="btn btn-outline-primary" style="display: inline-block; margin-top: 15px;">編集する</a>
+                </div>
+              </div>
+            </a>
+          </div>
+        {% endif %}
       {% endfor %}
     </div>
   </div>
@@ -61,7 +66,6 @@
     </ul>
     <p class="copyright">© 2023 Example Inc. All Rights Reserved.</p>
   </footer>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
