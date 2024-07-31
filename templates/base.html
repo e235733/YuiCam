@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>ゆいキャン - ログイン</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>ゆいキャン</h1>
-    <a href="{{url_for('signin')}}">新規登録</a>
-    <a href="{{url_for('login')}}">ログイン</a>
-    <footer>
-        <div class="container">
-            <p class="text-center mb-0">&copy; 2023 ゆいキャン</p>
-        </div>
-    </footer>
+    <div class="container vh-100 d-flex flex-column justify-content-center align-items-center">
+        <h1 class="mb-4">ゆいキャン</h1>
+        <button type="submit" class="btn btn-primary w-25" >新規登録</button>
+        <p></p>
+        <button type="submit" class="btn btn-primary w-25">ログイン</button>
+        </form>
+        <footer class="mt-4">
+            <p class="text-center">&copy; 2024 ゆいキャン</p>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

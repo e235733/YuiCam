@@ -5,15 +5,17 @@
 
 header {
     width: 100%;
-    padding: 12px 4% 10px;
-    background-color: lightskyblue;
+    padding: 12px 2% 10px;
+    background-color: whitesmoke; /* 背景に少し透明度を持たせる */
     position: sticky;
     top: 0;
     z-index: 999;
     display: flex;
     align-items: center;
     margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 影を付ける */
 }
+
 
 h1 {
    margin: 0; padding: 0;
