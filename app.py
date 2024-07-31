@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for,flash, sess
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import UserMixin
+from markupsafe import Markup, escape
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 
@@ -24,7 +25,11 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-# ==================================================
+# カスタムフィルターの定義
+@app.template_filter('nl2br')
+def nl2br(value):
+    return Markup("<br>".join(escape(value).split("\n")))
+
 # Flaskに対する設定
 # ==================================================
 # 乱数を設定
