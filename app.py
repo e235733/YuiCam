@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for,flash, session, Response, send_file
+from flask import Flask, render_template, request, redirect, url_for, session, Response, send_file
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import UserMixin
@@ -25,7 +25,9 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
+# ==================================================
 # カスタムフィルターの定義
+# ==================================================
 @app.template_filter('nl2br')
 def nl2br(value):
     return Markup("<br>".join(escape(value).split("\n")))
@@ -208,7 +210,6 @@ def login():
         user = User.query.filter_by(email=email).first()
         
         if user is None or not user.check_password(password):
-            # flash('Invalid email or password')
             return redirect(url_for('login'))
         
         session['user_id'] = user.id
@@ -328,7 +329,6 @@ def profile_edit(user_id):
                 user.profile_picture = file.read()
                                      
         db.session.commit()
-        # session['username'] = user.query.get(session.get('user_id')).username
         return redirect(url_for('profile_detail', user_id=user.id,user=user))
     
     if request.method == 'POST' and not form.validate_on_submit():
@@ -345,7 +345,7 @@ def profile_edit(user_id):
 def profile_picture(user_id):
     user = User.query.get_or_404(user_id)
     if user.profile_picture:
-        return Response(user.profile_picture, mimetype='image/jpeg')  # MIMEタイプは適切に設定
+        return Response(user.profile_picture, mimetype='image/jpeg')
     return send_file('static/uploads/placeholder.jpg')
 
 @app.route('/like/<int:liked_id>', methods=['POST'])
